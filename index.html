@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Dhankhar Mathematics — Complex Numbers & Inequalities Quiz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #eaf5ea;
+      -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+    .center-screen { display: flex; flex-direction: column; justify-content: center; align-items: center;
+      min-height: 100vh; padding: 20px; text-align: center; }
+    .quiz-container { display: none; margin: 40px auto; max-width: 980px; background: #fff;
+      padding: 22px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    .scheduled-message { background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 5px;
+      padding: 20px; margin: 20px 0; color: #856404; }
+    .mobile-warning { background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 5px;
+      padding: 20px; margin: 20px 0; color: #721c24; font-weight: bold; }
+    h1,h2 { color: #2e8b57; margin: 0.2em 0; }
+    .timer { font-size: 1.2em; font-weight: bold; color: #b22222; margin-bottom: 15px;
+      position: sticky; top: 0; background: #fff; padding: 10px; border: 2px solid #b22222;
+      border-radius: 5px; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+    .countdown { font-size: 1.05em; font-weight: bold; color: #dc3545; margin: 10px 0; }
+    .section-header { margin: 20px 0 10px; padding: 10px; background: #e0f0e0; border-radius: 6px; }
+    .question { margin-bottom: 16px; text-align: left; padding: 14px; border: 1px solid #e0e0e0;
+      border-radius: 6px; background: #f9f9f9; }
+    .math-question { margin: 8px 0; font-weight: bold; }
+    .options { margin-left: 6px; margin-top: 6px; line-height: 1.8; }
+    .feedback { font-weight: bold; margin-top: 5px; }
+    .correct { color: #2e8b57; }
+    .incorrect { color: #d2691e; }
+    .result { font-weight: bold; color: #2e8b57; margin-top: 20px; font-size: 1.05em; text-align: center;
+      padding: 15px; background: #d4edda; border: 1px solid #c3e6cb; border-radius: 6px; }
+    button { margin-top: 20px; font-size: 1.02em; padding: 10px 20px; cursor: pointer;
+      user-select: none; background-color: #4CAF50; color: white; border: none; border-radius: 5px; }
+    button:hover { background-color: #45a049; }
+    button.disabled { pointer-events: none; opacity: 0.6; background-color: #ccc; }
+    ul { text-align: left; display: inline-block; margin: 0 auto; padding-left: 20px; }
+    #tabSwitchWarning { font-weight: bold; color: #d2691e; margin-top: 15px; }
+    input[type="text"], input[type="email"] { width: 100%; padding: 8px; box-sizing: border-box;
+      margin-bottom: 15px; user-select: text; border: 1px solid #ccc; border-radius: 4px; background: #fff; }
+    .timer-info { background: #d4edda; border: 1px solid #c3e6cb; border-radius: 5px;
+      padding: 10px; margin: 10px 0; color: #155724; font-size: 0.9em; }
+    label { cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="center-screen" id="introScreen">
+    <h1>Dhankhar Mathematics Classes</h1>
+    <p><b>Test Booklet: Complex Numbers and Linear Inequalities</b></p>
+    <div class="mobile-warning" id="mobileWarning" style="display: none;">
+      <h3>📱 Mobile Device Detected</h3>
+      <p><strong>This quiz is not available on mobile devices.</strong></p>
+      <p>Please use a <strong>desktop or laptop computer</strong> to take this quiz.</p>
+    </div>
+    <div class="scheduled-message" id="scheduledMessage">
+      <h3>⏰ Quiz Schedule</h3>
+      <p id="scheduleWindow"><strong>Loading quiz schedule...</strong></p>
+      <p id="scheduleStatus">Checking current time...</p>
+      <div class="countdown" id="countdownTimer" style="display: none;"></div>
+    </div>
+    <p><b>Rules:</b>
+      <ul>
+        <li>You have <b>90 minutes</b> to complete 60 questions.</li>
+        <li>The quiz will begin in fullscreen mode to ensure fairness.</li>
+        <li><b>If you exit fullscreen at any time, the quiz will be automatically submitted immediately.</b></li>
+        <li><b>Tab switching is strictly prohibited.</b> If you switch tabs, quiz will auto-submit.</li>
+        <li><b>Copying of quiz content is disabled.</b></li>
+      </ul>
+    </p>
+    <p id="tabSwitchWarning">⚠️ This quiz is protected. Stay in fullscreen until finished.</p>
+    <div style="margin-top: 20px; text-align: left; max-width: 420px; width: 100%;">
+      <label for="userName" style="font-weight: bold;">Name:</label><br>
+      <input type="text" id="userName" placeholder="Enter your full name" autocomplete="off" /><br />
+      <label for="userEmail" style="font-weight: bold;">Email Address:</label><br>
+      <input type="email" id="userEmail" placeholder="Enter your email address" autocomplete="off" />
+    </div>
+    <div id="inputError" style="color: #d2691e; font-weight: bold; margin-bottom: 10px; display: none;"></div>
+    <button id="startBtn" onclick="startQuiz()" disabled>Start Quiz</button>
+  </div>
+
+  <div class="quiz-container" id="quizContainer">
+    <h2>Dhankhar Mathematics Classes</h2>
+    <p><b>Test Booklet: Complex Numbers and Linear Inequalities</b></p>
+    <p><b>Total Questions:</b> 60 | <b>Time Allowed:</b> 90 minutes</p>
+    <p><b>Instructions:</b> Each question has four options with only one correct answer.</p>
+    <div class="timer" id="timer">Time left: 90:00</div>
+    <div class="timer-info"><span>Time Allotted: 90 minutes</span></div>
+
+    <form id="quizForm">
+      <div class="section-header"><h3>Part A: Complex Numbers (40 MCQs)</h3></div>
+
+      <div class="question" id="qdiv1"><div class="math-question">1. Value of \(i\) (imaginary unit) is</div><div class="options">
+        <label><input type="radio" name="q1" value="a"/> a) 1</label><br/>
+        <label><input type="radio" name="q1" value="b"/> b) -1</label><br/>
+        <label><input type="radio" name="q1" value="c"/> c) \(\sqrt{-1}\)</label><br/>
+        <label><input type="radio" name="q1" value="d"/> d) 0</label></div><div class="feedback" id="feedback1"></div></div>
+
+      <div class="question" id="qdiv2"><div class="math-question">2. The complex conjugate of \(3+4i\) is</div><div class="options">
+        <label><input type="radio" name="q2" value="a"/> a) \(3-4i\)</label><br/>
+        <label><input type="radio" name="q2" value="b"/> b) \(-3+4i\)</label><br/>
+        <label><input type="radio" name="q2" value="c"/> c) \(4+3i\)</label><br/>
+        <label><input type="radio" name="q2" value="d"/> d) \(-3-4i\)</label></div><div class="feedback" id="feedback2"></div></div>
+
+      <div class="question" id="qdiv3"><div class="math-question">3. If \(z=5+12i\), then \(|z|\) is</div><div class="options">
+        <label><input type="radio" name="q3" value="a"/> a) 13</label><br/>
+        <label><input type="radio" name="q3" value="b"/> b) 17</label><br/>
+        <label><input type="radio" name="q3" value="c"/> c) 12</label><br/>
+        <label><input type="radio" name="q3" value="d"/> d) 25</label></div><div class="feedback" id="feedback3"></div></div>
+
+      <div class="question" id="qdiv4"><div class="math-question">4. \(i^{2}\) equals</div><div class="options">
+        <label><input type="radio" name="q4" value="a"/> a) 1</label><br/>
+        <label><input type="radio" name="q4" value="b"/> b) -1</label><br/>
+        <label><input type="radio" name="q4" value="c"/> c) \(i\)</label><br/>
+        <label><input type="radio" name="q4" value="d"/> d) 0</label></div><div class="feedback" id="feedback4"></div></div>
+
+      <div class="question" id="qdiv5"><div class="math-question">5. The sum of roots of the equation \(z^{2}+4z+13=0\) is</div><div class="options">
+        <label><input type="radio" name="q5" value="a"/> a) -4</label><br/>
+        <label><input type="radio" name="q5" value="b"/> b) 4</label><br/>
+        <label><input type="radio" name="q5" value="c"/> c) 13</label><br/>
+        <label><input type="radio" name="q5" value="d"/> d) -13</label></div><div class="feedback" id="feedback5"></div></div>
+
+      <div class="question" id="qdiv6"><div class="math-question">6. If \(z=1+i\), then \(z^{2}\) is</div><div class="options">
+        <label><input type="radio" name="q6" value="a"/> a) \(2i\)</label><br/>
+        <label><input type="radio" name="q6" value="b"/> b) 0</label><br/>
+        <label><input type="radio" name="q6" value="c"/> c) \(1+2i\)</label><br/>
+        <label><input type="radio" name="q6" value="d"/> d) \(2+2i\)</label></div><div class="feedback" id="feedback6"></div></div>
+
+      <div class="question" id="qdiv7"><div class="math-question">7. The modulus of the complex number \(-3-4i\) is</div><div class="options">
+        <label><input type="radio" name="q7" value="a"/> a) 7</label><br/>
+        <label><input type="radio" name="q7" value="b"/> b) 5</label><br/>
+        <label><input type="radio" name="q7" value="c"/> c) -5</label><br/>
+        <label><input type="radio" name="q7" value="d"/> d) \(\sqrt{13}\)</label></div><div class="feedback" id="feedback7"></div></div>
+
+      <div class="question" id="qdiv8"><div class="math-question">8. The argument of \(1+i\) is</div><div class="options">
+        <label><input type="radio" name="q8" value="a"/> a) \(\pi/6\)</label><br/>
+        <label><input type="radio" name="q8" value="b"/> b) \(\pi/4\)</label><br/>
+        <label><input type="radio" name="q8" value="c"/> c) \(\pi/2\)</label><br/>
+        <label><input type="radio" name="q8" value="d"/> d) \(\pi\)</label></div><div class="feedback" id="feedback8"></div></div>
+
+      <div class="question" id="qdiv9"><div class="math-question">9. The polar form of \(1+i\) is</div><div class="options">
+        <label><input type="radio" name="q9" value="a"/> a) \(\sqrt{2}(\cos \pi/4 + i \sin \pi/4)\)</label><br/>
+        <label><input type="radio" name="q9" value="b"/> b) \(1(\cos \pi/2 + i \sin \pi/2)\)</label><br/>
+        <label><input type="radio" name="q9" value="c"/> c) \(\sqrt{2}(\cos \pi/2 + i \sin \pi/2)\)</label><br/>
+        <label><input type="radio" name="q9" value="d"/> d) \(2(\cos \pi/4 + i \sin \pi/4)\)</label></div><div class="feedback" id="feedback9"></div></div>
+
+      <div class="question" id="qdiv10"><div class="math-question">10. If \(z=r(\cos \theta + i \sin \theta)\), then \(|z|=r\). True/False</div><div class="options">
+        <label><input type="radio" name="q10" value="a"/> a) True</label><br/>
+        <label><input type="radio" name="q10" value="b"/> b) False</label><br/>
+        <label><input type="radio" name="q10" value="c"/> c) Depends on \(\theta\)</label><br/>
+        <label><input type="radio" name="q10" value="d"/> d) None</label></div><div class="feedback" id="feedback10"></div></div>
+
+      <div class="question" id="qdiv11"><div class="math-question">11. If \(z_{1}=1+i\) and \(z_{2}=1-i\), then \(z_{1}^{10}+z_{2}^{10}=\)?</div><div class="options">
+        <label><input type="radio" name="q11" value="a"/> a) 0</label><br/>
+        <label><input type="radio" name="q11" value="b"/> b) 512</label><br/>
+        <label><input type="radio" name="q11" value="c"/> c) 256</label><br/>
+        <label><input type="radio" name="q11" value="d"/> d) 1024</label></div><div class="feedback" id="feedback11"></div></div>
+
+      <div class="question" id="qdiv12"><div class="math-question">12. Solve for \(z\) if \(z^{2}+(3-4i)z+13+24i=0\). The sum of roots is</div><div class="options">
+        <label><input type="radio" name="q12" value="a"/> a) \(-3+4i\)</label><br/>
+        <label><input type="radio" name="q12" value="b"/> b) \(3-4i\)</label><br/>
+        <label><input type="radio" name="q12" value="c"/> c) \(3+4i\)</label><br/>
+        <label><input type="radio" name="q12" value="d"/> d) \(-3-4i\)</label></div><div class="feedback" id="feedback12"></div></div>
+
+      <div class="question" id="qdiv13"><div class="math-question">13. The argument of the complex number \(-1+\sqrt{3}\,i\) in radians is</div><div class="options">
+        <label><input type="radio" name="q13" value="a"/> a) \(\pi/6\)</label><br/>
+        <label><input type="radio" name="q13" value="b"/> b) \(5\pi/6\)</label><br/>
+        <label><input type="radio" name="q13" value="c"/> c) \(\pi/3\)</label><br/>
+        <label><input type="radio" name="q13" value="d"/> d) \(2\pi/3\)</label></div><div class="feedback" id="feedback13"></div></div>
+
+      <div class="question" id="qdiv14"><div class="math-question">14. If \(|z|=2\) and \(z+\frac{1}{z}=3\), then \(z^{3}+\frac{1}{z^{3}}\) is</div><div class="options">
+        <label><input type="radio" name="q14" value="a"/> a) 18</label><br/>
+        <label><input type="radio" name="q14" value="b"/> b) 27</label><br/>
+        <label><input type="radio" name="q14" value="c"/> c) 9</label><br/>
+        <label><input type="radio" name="q14" value="d"/> d) 24</label></div><div class="feedback" id="feedback14"></div></div>
+
+      <div class="question" id="qdiv15"><div class="math-question">15. The value of \(i^{9}+i^{19}\) is</div><div class="options">
+        <label><input type="radio" name="q15" value="a"/> a) 0</label><br/>
+        <label><input type="radio" name="q15" value="b"/> b) 1</label><br/>
+        <label><input type="radio" name="q15" value="c"/> c) -1</label><br/>
+        <label><input type="radio" name="q15" value="d"/> d) \(i\)</label></div><div class="feedback" id="feedback15"></div></div>
+
+      <div class="question" id="qdiv16"><div class="math-question">16. If \(z=\frac{4+2i}{1-2i}\), then \(z\) equals</div><div class="options">
+        <label><input type="radio" name="q16" value="a"/> a) \(0+2i\)</label><br/>
+        <label><input type="radio" name="q16" value="b"/> b) \(1+2i\)</label><br/>
+        <label><input type="radio" name="q16" value="c"/> c) \(2+i\)</label><br/>
+        <label><input type="radio" name="q16" value="d"/> d) \(2-i\)</label></div><div class="feedback" id="feedback16"></div></div>
+
+      <div class="question" id="qdiv17"><div class="math-question">17. Which is the conjugate of \(\frac{3i+4}{2-3i}\)?</div><div class="options">
+        <label><input type="radio" name="q17" value="a"/> a) \(\frac{-3i+4}{2+3i}\)</label><br/>
+        <label><input type="radio" name="q17" value="b"/> b) \(\frac{-3i-4}{2+3i}\)</label><br/>
+        <label><input type="radio" name="q17" value="c"/> c) \(\frac{3i-4}{2+3i}\)</label><br/>
+        <label><input type="radio" name="q17" value="d"/> d) \(\frac{3i+4}{2+3i}\)</label></div><div class="feedback" id="feedback17"></div></div>
+
+      <div class="question" id="qdiv18"><div class="math-question">18. If \(z=3(\cos 60^{\circ} + i \sin 60^{\circ})\), then \(z^{2}\) is</div><div class="options">
+        <label><input type="radio" name="q18" value="a"/> a) \(9(\cos 120^{\circ} + i \sin 120^{\circ})\)</label><br/>
+        <label><input type="radio" name="q18" value="b"/> b) \(6(\cos 120^{\circ} + i \sin 120^{\circ})\)</label><br/>
+        <label><input type="radio" name="q18" value="c"/> c) \(9(\cos 30^{\circ} + i \sin 30^{\circ})\)</label><br/>
+        <label><input type="radio" name="q18" value="d"/> d) \(9(\cos 180^{\circ} + i \sin 180^{\circ})\)</label></div><div class="feedback" id="feedback18"></div></div>
+
+      <div class="question" id="qdiv19"><div class="math-question">19. If \(z=x+iy\), then \(|z|^{2}=\)?</div><div class="options">
+        <label><input type="radio" name="q19" value="a"/> a) \(x^{2}+y^{2}\)</label><br/>
+        <label><input type="radio" name="q19" value="b"/> b) \(x^{2}-y^{2}\)</label><br/>
+        <label><input type="radio" name="q19" value="c"/> c) \(x^{2}+2xy+y^{2}\)</label><br/>
+        <label><input type="radio" name="q19" value="d"/> d) \(x^{2}-2xy+y^{2}\)</label></div><div class="feedback" id="feedback19"></div></div>
+
+      <div class="question" id="qdiv20"><div class="math-question">20. Which of these is NOT a property of complex conjugates?</div><div class="options">
+        <label><input type="radio" name="q20" value="a"/> a) \(\overline{z+w}=\bar{z}+\bar{w}\)</label><br/>
+        <label><input type="radio" name="q20" value="b"/> b) \(\overline{zw}=\bar{z}\cdot\bar{w}\)</label><br/>
+        <label><input type="radio" name="q20" value="c"/> c) \(|z|=|\bar{z}|\)</label><br/>
+        <label><input type="radio" name="q20" value="d"/> d) \(\overline{\bar{z}}=-z\)</label></div><div class="feedback" id="feedback20"></div></div>
+
+      <div class="question" id="qdiv21"><div class="math-question">21. The square root of \(-16\) is</div><div class="options">
+        <label><input type="radio" name="q21" value="a"/> a) \(4i\)</label><br/>
+        <label><input type="radio" name="q21" value="b"/> b) \(-4i\)</label><br/>
+        <label><input type="radio" name="q21" value="c"/> c) \(\pm 4i\)</label><br/>
+        <label><input type="radio" name="q21" value="d"/> d) 4</label></div><div class="feedback" id="feedback21"></div></div>
+
+      <div class="question" id="qdiv22"><div class="math-question">22. If \(z=7-24i\), then the principal argument of \(z\) lies in</div><div class="options">
+        <label><input type="radio" name="q22" value="a"/> a) \(3^{rd}\) quadrant</label><br/>
+        <label><input type="radio" name="q22" value="b"/> b) \(4^{th}\) quadrant</label><br/>
+        <label><input type="radio" name="q22" value="c"/> c) \(1^{st}\) quadrant</label><br/>
+        <label><input type="radio" name="q22" value="d"/> d) \(2^{nd}\) quadrant</label></div><div class="feedback" id="feedback22"></div></div>
+
+      <div class="question" id="qdiv23"><div class="math-question">23. If \(z=a+bi\) and \(z^{2}=-1\), then value of \(a^{2}+b^{2}\) is</div><div class="options">
+        <label><input type="radio" name="q23" value="a"/> a) 1</label><br/>
+        <label><input type="radio" name="q23" value="b"/> b) 0</label><br/>
+        <label><input type="radio" name="q23" value="c"/> c) -1</label><br/>
+        <label><input type="radio" name="q23" value="d"/> d) 2</label></div><div class="feedback" id="feedback23"></div></div>
+
+      <div class="question" id="qdiv24"><div class="math-question">24. Which of the following is a root of \(x^{2}+1=0\)?</div><div class="options">
+        <label><input type="radio" name="q24" value="a"/> a) 0</label><br/>
+        <label><input type="radio" name="q24" value="b"/> b) 1</label><br/>
+        <label><input type="radio" name="q24" value="c"/> c) \(i\)</label><br/>
+        <label><input type="radio" name="q24" value="d"/> d) -1</label></div><div class="feedback" id="feedback24"></div></div>
+
+      <div class="question" id="qdiv25"><div class="math-question">25. The product of two complex conjugates \(z\) and \(\bar{z}\) is</div><div class="options">
+        <label><input type="radio" name="q25" value="a"/> a) 0</label><br/>
+        <label><input type="radio" name="q25" value="b"/> b) \(|z|^{2}\)</label><br/>
+        <label><input type="radio" name="q25" value="c"/> c) 1</label><br/>
+        <label><input type="radio" name="q25" value="d"/> d) \(|\bar{z}|\)</label></div><div class="feedback" id="feedback25"></div></div>
+
+      <div class="question" id="qdiv26"><div class="math-question">26. If \(z=2+3i\), what's the reciprocal \(\frac{1}{z}\)?</div><div class="options">
+        <label><input type="radio" name="q26" value="a"/> a) \(\frac{2}{13}-\frac{3}{13}i\)</label><br/>
+        <label><input type="radio" name="q26" value="b"/> b) \(\frac{2}{13}+\frac{3}{13}i\)</label><br/>
+        <label><input type="radio" name="q26" value="c"/> c) \(\frac{3}{13}-\frac{2}{13}i\)</label><br/>
+        <label><input type="radio" name="q26" value="d"/> d) \(-\frac{2}{13}+\frac{3}{13}i\)</label></div><div class="feedback" id="feedback26"></div></div>
+
+      <div class="question" id="qdiv27"><div class="math-question">27. The sum \(1+i+i^{2}+i^{3}+i^{4}\) is</div><div class="options">
+        <label><input type="radio" name="q27" value="a"/> a) 0</label><br/>
+        <label><input type="radio" name="q27" value="b"/> b) 1</label><br/>
+        <label><input type="radio" name="q27" value="c"/> c) 2</label><br/>
+        <label><input type="radio" name="q27" value="d"/> d) \(i\)</label></div><div class="feedback" id="feedback27"></div></div>
+
+      <div class="question" id="qdiv28"><div class="math-question">28. The argument of \(-i\) is</div><div class="options">
+        <label><input type="radio" name="q28" value="a"/> a) \(\pi/2\)</label><br/>
+        <label><input type="radio" name="q28" value="b"/> b) \(3\pi/2\)</label><br/>
+        <label><input type="radio" name="q28" value="c"/> c) 0</label><br/>
+        <label><input type="radio" name="q28" value="d"/> d) \(\pi\)</label></div><div class="feedback" id="feedback28"></div></div>
+
+      <div class="question" id="qdiv29"><div class="math-question">29. If \(\theta\) is argument of the complex number \(z\), then argument of \(-z\) is</div><div class="options">
+        <label><input type="radio" name="q29" value="a"/> a) \(\theta+\pi\)</label><br/>
+        <label><input type="radio" name="q29" value="b"/> b) \(\theta-\pi\)</label><br/>
+        <label><input type="radio" name="q29" value="c"/> c) \(-\theta\)</label><br/>
+        <label><input type="radio" name="q29" value="d"/> d) \(\theta\)</label></div><div class="feedback" id="feedback29"></div></div>
+
+      <div class="question" id="qdiv30"><div class="math-question">30. If \(z=2\,\mathrm{cis}\,30^{\circ}\), \(w=2\,\mathrm{cis}\,60^{\circ}\), then \(zw\) is</div><div class="options">
+        <label><input type="radio" name="q30" value="a"/> a) \(4\,\mathrm{cis}\,90^{\circ}\)</label><br/>
+        <label><input type="radio" name="q30" value="b"/> b) \(4\,\mathrm{cis}\,120^{\circ}\)</label><br/>
+        <label><input type="radio" name="q30" value="c"/> c) \(4\,\mathrm{cis}\,150^{\circ}\)</label><br/>
+        <label><input type="radio" name="q30" value="d"/> d) \(\sqrt{3}\,\mathrm{cis}\,90^{\circ}\)</label></div><div class="feedback" id="feedback30"></div></div>
+
+      <div class="question" id="qdiv31"><div class="math-question">31. Find the cube roots of unity other than 1.</div><div class="options">
+        <label><input type="radio" name="q31" value="a"/> a) \(\frac{-1 \pm i\sqrt{3}}{2}\)</label><br/>
+        <label><input type="radio" name="q31" value="b"/> b) \(\pm i\)</label><br/>
+        <label><input type="radio" name="q31" value="c"/> c) \(2,-1\)</label><br/>
+        <label><input type="radio" name="q31" value="d"/> d) 0 and 1</label></div><div class="feedback" id="feedback31"></div></div>
+
+      <div class="question" id="qdiv32"><div class="math-question">32. Which is NOT true for complex numbers?</div><div class="options">
+        <label><input type="radio" name="q32" value="a"/> a) Addition is commutative</label><br/>
+        <label><input type="radio" name="q32" value="b"/> b) Multiplication is commutative</label><br/>
+        <label><input type="radio" name="q32" value="c"/> c) Division is commutative</label><br/>
+        <label><input type="radio" name="q32" value="d"/> d) \(\overline{z+w}=\bar{z}+\bar{w}\)</label></div><div class="feedback" id="feedback32"></div></div>
+
+      <div class="question" id="qdiv33"><div class="math-question">33. The real part of \(\frac{1+i}{1-i}\) is</div><div class="options">
+        <label><input type="radio" name="q33" value="a"/> a) 0</label><br/>
+        <label><input type="radio" name="q33" value="b"/> b) 1</label><br/>
+        <label><input type="radio" name="q33" value="c"/> c) -1</label><br/>
+        <label><input type="radio" name="q33" value="d"/> d) 2</label></div><div class="feedback" id="feedback33"></div></div>
+
+      <div class="question" id="qdiv34"><div class="math-question">34. If \(z^{3}=1\), then \(|z|\) equals</div><div class="options">
+        <label><input type="radio" name="q34" value="a"/> a) 1</label><br/>
+        <label><input type="radio" name="q34" value="b"/> b) 0</label><br/>
+        <label><input type="radio" name="q34" value="c"/> c) 3</label><br/>
+        <label><input type="radio" name="q34" value="d"/> d) \(\sqrt{3}\)</label></div><div class="feedback" id="feedback34"></div></div>
+
+      <div class="question" id="qdiv35"><div class="math-question">35. The sum \(1+i+i^{2}+i^{3}+i^{4}+i^{5}+i^{6}+i^{7}\) is</div><div class="options">
+        <label><input type="radio" name="q35" value="a"/> a) 0</label><br/>
+        <label><input type="radio" name="q35" value="b"/> b) 1</label><br/>
+        <label><input type="radio" name="q35" value="c"/> c) 2</label><br/>
+        <label><input type="radio" name="q35" value="d"/> d) -1</label></div><div class="feedback" id="feedback35"></div></div>
+
+      <div class="question" id="qdiv36"><div class="math-question">36. If \(z=4-3i\), then \(\frac{z}{|z|}\) equals</div><div class="options">
+        <label><input type="radio" name="q36" value="a"/> a) \(\frac{4}{5}-\frac{3}{5}i\)</label><br/>
+        <label><input type="radio" name="q36" value="b"/> b) \(\frac{3}{5}-\frac{4}{5}i\)</label><br/>
+        <label><input type="radio" name="q36" value="c"/> c) \(\frac{4}{5}+\frac{3}{5}i\)</label><br/>
+        <label><input type="radio" name="q36" value="d"/> d) \(-\frac{4}{5}+\frac{3}{5}i\)</label></div><div class="feedback" id="feedback36"></div></div>
+
+      <div class="question" id="qdiv37"><div class="math-question">37. Solve for \(z\) if \(z^{2}=-4\).</div><div class="options">
+        <label><input type="radio" name="q37" value="a"/> a) \(\pm 2i\)</label><br/>
+        <label><input type="radio" name="q37" value="b"/> b) \(\pm 4i\)</label><br/>
+        <label><input type="radio" name="q37" value="c"/> c) 2</label><br/>
+        <label><input type="radio" name="q37" value="d"/> d) 4</label></div><div class="feedback" id="feedback37"></div></div>
+
+      <div class="question" id="qdiv38"><div class="math-question">38. The polynomial with roots \(1+i\) and \(1-i\) is</div><div class="options">
+        <label><input type="radio" name="q38" value="a"/> a) \(x^{2}-2x+2\)</label><br/>
+        <label><input type="radio" name="q38" value="b"/> b) \(x^{2}+2x+2\)</label><br/>
+        <label><input type="radio" name="q38" value="c"/> c) \(x^{2}-2x-2\)</label><br/>
+        <label><input type="radio" name="q38" value="d"/> d) \(x^{2}+2x-2\)</label></div><div class="feedback" id="feedback38"></div></div>
+
+      <div class="question" id="qdiv39"><div class="math-question">39. If \(z=-1+i\sqrt{3}\), then \(z^{3}\) equals</div><div class="options">
+        <label><input type="radio" name="q39" value="a"/> a) 8</label><br/>
+        <label><input type="radio" name="q39" value="b"/> b) 1</label><br/>
+        <label><input type="radio" name="q39" value="c"/> c) -1</label><br/>
+        <label><input type="radio" name="q39" value="d"/> d) 0</label></div><div class="feedback" id="feedback39"></div></div>
+
+      <div class="question" id="qdiv40"><div class="math-question">40. The conjugate of \(i^{3}\) is</div><div class="options">
+        <label><input type="radio" name="q40" value="a"/> a) \(-i\)</label><br/>
+        <label><input type="radio" name="q40" value="b"/> b) \(i\)</label><br/>
+        <label><input type="radio" name="q40" value="c"/> c) 1</label><br/>
+        <label><input type="radio" name="q40" value="d"/> d) -1</label></div><div class="feedback" id="feedback40"></div></div>
+
+      <div class="section-header"><h3>Part B: Linear Inequalities (20 MCQs)</h3></div>
+
+      <div class="question" id="qdiv41"><div class="math-question">41. If \(3x-5>7\), then \(x\) lies in</div><div class="options">
+        <label><input type="radio" name="q41" value="a"/> a) \(x>4\)</label><br/>
+        <label><input type="radio" name="q41" value="b"/> b) \(x>\frac{2}{3}\)</label><br/>
+        <label><input type="radio" name="q41" value="c"/> c) \(x<4\)</label><br/>
+        <label><input type="radio" name="q41" value="d"/> d) \(x<\frac{2}{3}\)</label></div><div class="feedback" id="feedback41"></div></div>
+
+      <div class="question" id="qdiv42"><div class="math-question">42. The solution set of \(2x+3<9\) is</div><div class="options">
+        <label><input type="radio" name="q42" value="a"/> a) \(x<3\)</label><br/>
+        <label><input type="radio" name="q42" value="b"/> b) \(x>3\)</label><br/>
+        <label><input type="radio" name="q42" value="c"/> c) \(x<6\)</label><br/>
+        <label><input type="radio" name="q42" value="d"/> d) \(x>6\)</label></div><div class="feedback" id="feedback42"></div></div>
+
+      <div class="question" id="qdiv43"><div class="math-question">43. If \(5-2x \leq 3\), then \(x\) is</div><div class="options">
+        <label><input type="radio" name="q43" value="a"/> a) \(x \geq 1\)</label><br/>
+        <label><input type="radio" name="q43" value="b"/> b) \(x \leq 1\)</label><br/>
+        <label><input type="radio" name="q43" value="c"/> c) \(x \geq -1\)</label><br/>
+        <label><input type="radio" name="q43" value="d"/> d) \(x \leq -1\)</label></div><div class="feedback" id="feedback43"></div></div>
+
+      <div class="question" id="qdiv44"><div class="math-question">44. Find \(x\) if \(-3x+4>10\).</div><div class="options">
+        <label><input type="radio" name="q44" value="a"/> a) \(x<-2\)</label><br/>
+        <label><input type="radio" name="q44" value="b"/> b) \(x>-2\)</label><br/>
+        <label><input type="radio" name="q44" value="c"/> c) \(x<2\)</label><br/>
+        <label><input type="radio" name="q44" value="d"/> d) \(x>2\)</label></div><div class="feedback" id="feedback44"></div></div>
+
+      <div class="question" id="qdiv45"><div class="math-question">45. Solve \(4x-1 \geq 7\).</div><div class="options">
+        <label><input type="radio" name="q45" value="a"/> a) \(x \geq 2\)</label><br/>
+        <label><input type="radio" name="q45" value="b"/> b) \(x \leq 2\)</label><br/>
+        <label><input type="radio" name="q45" value="c"/> c) \(x>4\)</label><br/>
+        <label><input type="radio" name="q45" value="d"/> d) \(x<4\)</label></div><div class="feedback" id="feedback45"></div></div>
+
+      <div class="question" id="qdiv46"><div class="math-question">46. If \(x-3<5\), then \(x\) is</div><div class="options">
+        <label><input type="radio" name="q46" value="a"/> a) \(x<8\)</label><br/>
+        <label><input type="radio" name="q46" value="b"/> b) \(x>8\)</label><br/>
+        <label><input type="radio" name="q46" value="c"/> c) \(x<2\)</label><br/>
+        <label><input type="radio" name="q46" value="d"/> d) \(x>2\)</label></div><div class="feedback" id="feedback46"></div></div>
+
+      <div class="question" id="qdiv47"><div class="math-question">47. The inequality \(2x+3>7\) has solution</div><div class="options">
+        <label><input type="radio" name="q47" value="a"/> a) \(x>2\)</label><br/>
+        <label><input type="radio" name="q47" value="b"/> b) \(x<2\)</label><br/>
+        <label><input type="radio" name="q47" value="c"/> c) \(x>4\)</label><br/>
+        <label><input type="radio" name="q47" value="d"/> d) \(x<4\)</label></div><div class="feedback" id="feedback47"></div></div>
+
+      <div class="question" id="qdiv48"><div class="math-question">48. For \(x-2 \leq 5\), find \(x\).</div><div class="options">
+        <label><input type="radio" name="q48" value="a"/> a) \(x \leq 7\)</label><br/>
+        <label><input type="radio" name="q48" value="b"/> b) \(x \geq 7\)</label><br/>
+        <label><input type="radio" name="q48" value="c"/> c) \(x<3\)</label><br/>
+        <label><input type="radio" name="q48" value="d"/> d) \(x>3\)</label></div><div class="feedback" id="feedback48"></div></div>
+
+      <div class="question" id="qdiv49"><div class="math-question">49. If \(3x+2<11\), solution is</div><div class="options">
+        <label><input type="radio" name="q49" value="a"/> a) \(x<3\)</label><br/>
+        <label><input type="radio" name="q49" value="b"/> b) \(x>3\)</label><br/>
+        <label><input type="radio" name="q49" value="c"/> c) \(x<5\)</label><br/>
+        <label><input type="radio" name="q49" value="d"/> d) \(x>5\)</label></div><div class="feedback" id="feedback49"></div></div>
+
+      <div class="question" id="qdiv50"><div class="math-question">50. The inequality \(5x-4 \geq 11\) implies</div><div class="options">
+        <label><input type="radio" name="q50" value="a"/> a) \(x \geq 3\)</label><br/>
+        <label><input type="radio" name="q50" value="b"/> b) \(x \leq 3\)</label><br/>
+        <label><input type="radio" name="q50" value="c"/> c) \(x>3\)</label><br/>
+        <label><input type="radio" name="q50" value="d"/> d) \(x<3\)</label></div><div class="feedback" id="feedback50"></div></div>
+
+      <div class="question" id="qdiv51"><div class="math-question">51. If \(\frac{2x-1}{x+3} \geq 1\), then solution is</div><div class="options">
+        <label><input type="radio" name="q51" value="a"/> a) \(x \geq 4\)</label><br/>
+        <label><input type="radio" name="q51" value="b"/> b) \(x<-3\) or \(x \geq 4\)</label><br/>
+        <label><input type="radio" name="q51" value="c"/> c) \(x<-3\) only</label><br/>
+        <label><input type="radio" name="q51" value="d"/> d) \(x>-3\) and \(x \neq 4\)</label></div><div class="feedback" id="feedback51"></div></div>
+
+      <div class="question" id="qdiv52"><div class="math-question">52. For \(x^{2}-5x+6<0\), the solution is</div><div class="options">
+        <label><input type="radio" name="q52" value="a"/> a) \(2<x<3\)</label><br/>
+        <label><input type="radio" name="q52" value="b"/> b) \(x<2\) or \(x>3\)</label><br/>
+        <label><input type="radio" name="q52" value="c"/> c) \(x<0\)</label><br/>
+        <label><input type="radio" name="q52" value="d"/> d) \(x>0\)</label></div><div class="feedback" id="feedback52"></div></div>
+
+      <div class="question" id="qdiv53"><div class="math-question">53. Which represents the solution to \(|2x-3| \leq 5\)?</div><div class="options">
+        <label><input type="radio" name="q53" value="a"/> a) \(-1 \leq x \leq 4\)</label><br/>
+        <label><input type="radio" name="q53" value="b"/> b) \(-1 \leq x \leq 2\)</label><br/>
+        <label><input type="radio" name="q53" value="c"/> c) \(1 \leq x \leq 4\)</label><br/>
+        <label><input type="radio" name="q53" value="d"/> d) \(0 \leq x \leq 4\)</label></div><div class="feedback" id="feedback53"></div></div>
+
+      <div class="question" id="qdiv54"><div class="math-question">54. The inequality \(3-2x>7\) simplifies to</div><div class="options">
+        <label><input type="radio" name="q54" value="a"/> a) \(x<-2\)</label><br/>
+        <label><input type="radio" name="q54" value="b"/> b) \(x>-2\)</label><br/>
+        <label><input type="radio" name="q54" value="c"/> c) \(x<2\)</label><br/>
+        <label><input type="radio" name="q54" value="d"/> d) \(x>2\)</label></div><div class="feedback" id="feedback54"></div></div>
+
+      <div class="question" id="qdiv55"><div class="math-question">55. The solution for \(4-x \leq 2x\) is</div><div class="options">
+        <label><input type="radio" name="q55" value="a"/> a) \(x \geq 1\)</label><br/>
+        <label><input type="radio" name="q55" value="b"/> b) \(x \leq 1\)</label><br/>
+        <label><input type="radio" name="q55" value="c"/> c) \(x<1\)</label><br/>
+        <label><input type="radio" name="q55" value="d"/> d) \(x>1\)</label></div><div class="feedback" id="feedback55"></div></div>
+
+      <div class="question" id="qdiv56"><div class="math-question">56. The compound inequality \(1<2x+3 \leq 7\) has solution</div><div class="options">
+        <label><input type="radio" name="q56" value="a"/> a) \(-1<x \leq 2\)</label><br/>
+        <label><input type="radio" name="q56" value="b"/> b) \(-2<x \leq 3\)</label><br/>
+        <label><input type="radio" name="q56" value="c"/> c) \(-1 \leq x<2\)</label><br/>
+        <label><input type="radio" name="q56" value="d"/> d) \(1<x \leq 2\)</label></div><div class="feedback" id="feedback56"></div></div>
+
+      <div class="question" id="qdiv57"><div class="math-question">57. For \(\frac{x-2}{x+1}<0\), solution includes</div><div class="options">
+        <label><input type="radio" name="q57" value="a"/> a) \(-1<x<2\)</label><br/>
+        <label><input type="radio" name="q57" value="b"/> b) \(x<-1\) or \(x>2\)</label><br/>
+        <label><input type="radio" name="q57" value="c"/> c) \(x>-1\) and \(x<2\)</label><br/>
+        <label><input type="radio" name="q57" value="d"/> d) \(x<-1\) and \(x>2\)</label></div><div class="feedback" id="feedback57"></div></div>
+
+      <div class="question" id="qdiv58"><div class="math-question">58. Solve \(-\frac{3}{x} \geq 1\).</div><div class="options">
+        <label><input type="radio" name="q58" value="a"/> a) \(x \leq -3\)</label><br/>
+        <label><input type="radio" name="q58" value="b"/> b) \(x>-3\)</label><br/>
+        <label><input type="radio" name="q58" value="c"/> c) \(x<3\)</label><br/>
+        <label><input type="radio" name="q58" value="d"/> d) \(x \geq 3\)</label></div><div class="feedback" id="feedback58"></div></div>
+
+      <div class="question" id="qdiv59"><div class="math-question">59. If \(|x+2|>3\), then solution is</div><div class="options">
+        <label><input type="radio" name="q59" value="a"/> a) \(x<-5\) or \(x>1\)</label><br/>
+        <label><input type="radio" name="q59" value="b"/> b) \(-5<x<1\)</label><br/>
+        <label><input type="radio" name="q59" value="c"/> c) \(x<-5\) and \(x>1\)</label><br/>
+        <label><input type="radio" name="q59" value="d"/> d) \(-5>x>1\)</label></div><div class="feedback" id="feedback59"></div></div>
+
+      <div class="question" id="qdiv60"><div class="math-question">60. The solution set of \(-2 \leq 3x-1<4\) is</div><div class="options">
+        <label><input type="radio" name="q60" value="a"/> a) \(-\frac{1}{3} \leq x<\frac{5}{3}\)</label><br/>
+        <label><input type="radio" name="q60" value="b"/> b) \(-\frac{1}{3}<x \leq \frac{5}{3}\)</label><br/>
+        <label><input type="radio" name="q60" value="c"/> c) \(-\frac{3}{2} \leq x<4\)</label><br/>
+        <label><input type="radio" name="q60" value="d"/> d) \(-\frac{5}{3} \leq x<\frac{1}{3}\)</label></div><div class="feedback" id="feedback60"></div></div>
+
+      <button type="button" id="submitBtn" onclick="checkAnswers()">Submit Answers</button>
+    </form>
+    <div class="result" id="result"></div>
+  </div>
+
+<script>
+let timer=5400,timerInterval,scheduleInterval,quizSubmitted=false,isMobile=false;
+const QUIZ_DATE='2025-10-22',QUIZ_START_TIME='04:30',QUIZ_ENTRY_CUTOFF='04:40',TIMEZONE='+05:30';
+const quizStartDate=new Date(`${QUIZ_DATE}T${QUIZ_START_TIME}:00${TIMEZONE}`);
+const lastStartDate=new Date(`${QUIZ_DATE}T${QUIZ_ENTRY_CUTOFF}:00${TIMEZONE}`);
+function formatTime(d){return d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',timeZoneName:'short'})}
+function formatDate(d){return d.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})}
+function updateScheduleDisplay(){document.getElementById('scheduleWindow').innerHTML=`<strong>Quiz Window: ${formatDate(quizStartDate)} from ${formatTime(quizStartDate)} to ${formatTime(lastStartDate)}</strong>`}
+function detectMobileDevice(){const ua=navigator.userAgent||navigator.vendor||window.opera;return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua)||('ontouchstart'in window&&window.innerWidth<768)}
+document.addEventListener('contextmenu',e=>{e.preventDefault();return false});
+document.addEventListener('selectstart',e=>{e.preventDefault();return false});
+function keyboardBlocker(e){const isInput=e.target.tagName==='INPUT'&&(e.target.type==='text'||e.target.type==='email');
+if(e.keyCode===123||(e.ctrlKey&&e.shiftKey&&e.keyCode===73)||(e.ctrlKey&&e.shiftKey&&e.keyCode===74)||(e.ctrlKey&&e.keyCode===85)||(e.ctrlKey&&e.shiftKey&&e.keyCode===75)||(e.ctrlKey&&e.shiftKey&&e.keyCode===67)||(e.ctrlKey&&e.keyCode===65&&!isInput)||(e.ctrlKey&&e.keyCode===67&&!isInput)||(e.ctrlKey&&e.keyCode===86&&!isInput)||(e.ctrlKey&&e.keyCode===88&&!isInput)||(e.ctrlKey&&e.keyCode===83)||(e.ctrlKey&&e.keyCode===80)||(e.ctrlKey&&e.keyCode===87)||(e.ctrlKey&&e.keyCode===82)||e.keyCode===116||(e.ctrlKey&&e.keyCode===116)||(e.ctrlKey&&e.shiftKey&&e.keyCode===82)){e.preventDefault();e.stopPropagation();return false}
+if(isInput)return true;if(document.getElementById('quizContainer').style.display==='block'){e.preventDefault();return false}return true}
+function goFullScreen(e){if(e.requestFullscreen)e.requestFullscreen();else if(e.webkitRequestFullscreen)e.webkitRequestFullscreen();else if(e.msRequestFullscreen)e.msRequestFullscreen()}
+function exitFullScreen(){if(document.exitFullscreen)document.exitFullscreen();else if(document.webkitExitFullscreen)document.webkitExitFullscreen();else if(document.msExitFullscreen)document.msExitFullscreen()}
+function autoSubmit(){if(quizSubmitted)return;alert('You exited fullscreen/switched tabs. Quiz submitted.');checkAnswers(true)}
+document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&document.getElementById('quizContainer').style.display==='block'&&!quizSubmitted)autoSubmit()});
+document.addEventListener('visibilitychange',()=>{if(!quizSubmitted&&document.getElementById('quizContainer').style.display==='block'&&document.hidden)autoSubmit()});
+function checkSchedule(){const now=new Date(),ss=document.getElementById('scheduleStatus'),sb=document.getElementById('startBtn'),ct=document.getElementById('countdownTimer');
+if(isMobile){ss.innerHTML='<span style="color:red;">❌ Mobile not supported</span>';ct.style.display='none';sb.disabled=true;sb.textContent='Not Available on Mobile';sb.style.backgroundColor='#ccc';return}
+if(now>=quizStartDate&&now<=lastStartDate){ss.innerHTML='<span style="color:green;">✅ Quiz available!</span>';ct.style.display='none';sb.disabled=false;sb.textContent='Start Quiz';sb.style.backgroundColor='#4CAF50'}
+else if(now>lastStartDate){ss.innerHTML='<span style="color:red;">❌ Quiz closed</span>';ct.style.display='none';sb.disabled=true;sb.textContent='Quiz Closed';sb.style.backgroundColor='#ccc'}
+else{const tl=quizStartDate-now,d=Math.floor(tl/864e5),h=Math.floor((tl%864e5)/36e5),m=Math.floor((tl%36e5)/6e4),s=Math.floor((tl%6e4)/1e3);
+ss.innerHTML='<span style="color:red;">❌ Quiz soon</span>';ct.innerHTML=d>0?`⏱️ ${d}d ${h}h ${m}m ${s}s`:h>0?`⏱️ ${h}h ${m}m ${s}s`:`⏱️ ${m}m ${s}s`;ct.style.display='block';sb.disabled=true;sb.textContent='Not Started';sb.style.backgroundColor='#ccc'}}
+function startTimer(){updateTimerDisplay();timerInterval=setInterval(()=>{timer--;updateTimerDisplay();if(timer<=0){clearInterval(timerInterval);if(!quizSubmitted){alert("Time's up!");checkAnswers(true)}}},1000)}
+function updateTimerDisplay(){const m=Math.floor(timer/60),s=timer%60,t=document.getElementById('timer');t.textContent=`Time left: ${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;t.style.color=timer<=300?'#ff0000':timer<=600?'#ff6600':'#b22222'}
+function startQuiz(){if(isMobile){alert('Not available on mobile');return}const now=new Date();if(now<quizStartDate){alert('Not yet available');return}if(now>lastStartDate){alert('Quiz closed');return}
+const n=document.getElementById('userName').value.trim(),e=document.getElementById('userEmail').value.trim(),err=document.getElementById('inputError');
+if(!n){err.textContent='Enter name';err.style.display='block';return}if(!e){err.textContent='Enter email';err.style.display='block';return}
+if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)){err.textContent='Valid email required';err.style.display='block';return}
+clearInterval(scheduleInterval);err.style.display='none';document.getElementById('introScreen').style.display='none';document.getElementById('quizContainer').style.display='block';quizSubmitted=false;startTimer();goFullScreen(document.documentElement);if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise()}
+const correctAnswers=['b','a','a','b','b','a','b','b','a','a','a','a','d','c','a','d','c','a','a','c','c','d','a','c','d','a','b','a','a','a','a','c','a','a','a','c','a','a','a','b','d','b','d','c','b','a','b','d','b','d','a','a','a','d','b','c','b','d','a','a'];
+const ansText=['√-1','3-4i','13','-1','4','2i','5','π/4','√2(cos π/4+i sin π/4)','True','0','-3+4i','2π/3','9','0','2-i','(3i-4)/(2+3i)','9(cos 120°+i sin 120°)','x²+y²','|z̄|','±4i','2nd quad','1','i','|z̄|','(2/13)-(3/13)i','1','π/2','θ+π','4 cis 90°','(-1±i√3)/2','Div NOT commut','0','1','0','(4/5)+(3/5)i','±2i','x²-2x+2','8','i','x>4','x>3','x≤1','x<2','x≤2','x<8','x<2','x>3','x<3','x≥3','x≥4','2<x<3','-1≤x≤4','x>2','x≥1','x≤1','-1<x≤2','x<-1 or x>2','x≥3','x<-5 or x>1','-1/3≤x<5/3'];
+function sendToFormspree(n,e,sc,t){fetch("https://formspree.io/f/xyzppvl",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify({name:n,email:e,score:sc,total:60,timeUsed:t,submissionTime:new Date().toISOString()})}).catch(err=>console.error(err))}
+function checkAnswers(auto=false){if(quizSubmitted)return;const tUsed=Math.floor((5400-timer)/60);let score=0,ans=0;
+for(let i=1;i<=60;i++){const fb=document.getElementById('feedback'+i);if(fb)fb.innerHTML='';const rs=document.getElementsByName('q'+i);let uv='',qa=false;
+for(const r of rs){if(r.checked){qa=true;ans++;uv=r.value;if(r.value===correctAnswers[i-1])score++;break}}
+if(fb){if(qa){if(uv===correctAnswers[i-1])fb.innerHTML="<span class='correct'>Correct!</span>";else fb.innerHTML="<span class='incorrect'>Incorrect. Correct: <b>"+ansText[i-1]+"</b></span>"}
+else fb.innerHTML="<span class='incorrect'>Not answered. Correct: <b>"+ansText[i-1]+"</b></span>"}}
+quizSubmitted=true;clearInterval(timerInterval);document.querySelectorAll('input[type=radio]').forEach(e=>e.disabled=true);const sb=document.getElementById('submitBtn');if(sb){sb.disabled=true;sb.classList.add('disabled')}
+exitFullScreen();const n=document.getElementById('userName').value.trim(),e=document.getElementById('userEmail').value.trim();sendToFormspree(n,e,score,tUsed);
+const pct=((score/60)*100).toFixed(1);document.getElementById('result').innerHTML=`<strong>Quiz Completed!</strong><br>Your Score: <strong>${score} out of 60</strong> (${pct}%)<br>Questions Answered: ${ans} out of 60<br>Time Used: ${tUsed} minutes`;
+document.getElementById('result').scrollIntoView({behavior:'smooth'})}
+document.addEventListener('DOMContentLoaded',()=>{document.addEventListener('keydown',keyboardBlocker,true);document.addEventListener('keyup',keyboardBlocker,true);
+isMobile=detectMobileDevice();if(isMobile){document.getElementById('mobileWarning').style.display='block';document.getElementById('scheduledMessage').style.display='none'}else updateScheduleDisplay();
+checkSchedule();scheduleInterval=setInterval(checkSchedule,1000);document.getElementById('userName').addEventListener('input',()=>{const n=document.getElementById('userName').value.trim(),e=document.getElementById('userEmail').value.trim();document.getElementById('startBtn').disabled=!(n&&e)});
+document.getElementById('userEmail').addEventListener('input',()=>{const n=document.getElementById('userName').value.trim(),e=document.getElementById('userEmail').value.trim();document.getElementById('startBtn').disabled=!(n&&e)})});
+window.onload=()=>{document.getElementById('quizContainer').style.display='none';document.getElementById('introScreen').style.display='flex'};
+</script>
+</body>
+</html>
