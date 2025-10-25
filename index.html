@@ -344,7 +344,7 @@
 
 <script>
 let timer=3600,timerInterval,scheduleInterval,quizSubmitted=false,isMobile=false;
-const QUIZ_DATE='2025-10-24',QUIZ_START_TIME='17:00',QUIZ_ENTRY_CUTOFF='17:15',TIMEZONE='+05:30';
+const QUIZ_DATE='2025-10-24',QUIZ_START_TIME='18:10',QUIZ_ENTRY_CUTOFF='18:20',TIMEZONE='+05:30';
 const quizStartDate=new Date(`${QUIZ_DATE}T${QUIZ_START_TIME}:00${TIMEZONE}`);
 const lastStartDate=new Date(`${QUIZ_DATE}T${QUIZ_ENTRY_CUTOFF}:00${TIMEZONE}`);
 function formatTime(d){return d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',timeZoneName:'short'})}
